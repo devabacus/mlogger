@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
+
 
 abstract class LoggerService {
   void info(String msg);

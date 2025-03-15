@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   talker_flutter: ^4.7.0
+  talker_riverpod_logger: ^4.6.3
   
 
 dev_dependencies:
