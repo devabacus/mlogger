@@ -4,9 +4,9 @@ import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 
 
 abstract class LoggerService {
-  void info(String msg);
-  void warning(String msg);
-  void debug(String msg);
+  void info(dynamic msg);
+  void warning(dynamic msg);
+  void debug(dynamic msg);
   void error(dynamic msg, [Object? exception, StackTrace? stackTrace]);
   void showLogs(BuildContext context);
 }
@@ -22,7 +22,7 @@ class TalkerService implements LoggerService {
   }
 
   @override
-  void debug(String msg) {
+  void debug(dynamic msg) {
     talker.debug(msg);
   }
 
@@ -32,12 +32,12 @@ class TalkerService implements LoggerService {
   }
 
   @override
-  void info(String msg) {
+  void info(dynamic msg) {
     talker.info(msg);
   }
 
   @override
-  void warning(String msg) {
+  void warning(dynamic msg) {
     talker.warning(msg);
   }
   
