@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
+import 'package:logger/logger.dart' as log;
 
 
 abstract class LoggerService {
@@ -8,6 +8,7 @@ abstract class LoggerService {
   void warning(dynamic msg);
   void debug(dynamic msg);
   void error(dynamic msg, [Object? exception, StackTrace? stackTrace]);
+  void critical(dynamic msg, [Object? exception, StackTrace? stackTrace]); 
   void showLogs(BuildContext context);
 }
 
@@ -16,11 +17,6 @@ class TalkerService implements LoggerService {
 
   TalkerService(this.talker);
   
-  // Фабричный конструктор для удобного создания
-  factory TalkerService.init() {
-    return TalkerService(TalkerFlutter.init());
-  }
-
   @override
   void debug(dynamic msg) {
     talker.debug(msg);
@@ -29,6 +25,11 @@ class TalkerService implements LoggerService {
   @override
   void error(dynamic msg, [Object? exception, StackTrace? stackTrace]) {
     talker.error(msg, exception, stackTrace);
+  }
+
+   @override
+  void critical(dynamic msg, [Object? exception, StackTrace? stackTrace]) {
+    talker.critical(msg, exception, stackTrace);
   }
 
   @override
@@ -49,4 +50,51 @@ class TalkerService implements LoggerService {
   }
 }
 
-final log = TalkerService.init();
+
+class SimpleLoggerService implements LoggerService {
+  final log.Logger _logger;
+
+  SimpleLoggerService() : _logger = log.Logger(
+    printer: log.PrettyPrinter(
+      methodCount: 2,
+      errorMethodCount: 8,
+      lineLength: 120,
+      colors: true,
+      printEmojis: true,
+      dateTimeFormat: log.DateTimeFormat.onlyTimeAndSinceStart,
+    ),
+  );
+
+  @override
+  void debug(dynamic msg) {
+    _logger.d(msg);
+  }
+
+  @override
+  void error(dynamic msg, [Object? exception, StackTrace? stackTrace]) {
+    _logger.e(msg, error: exception, stackTrace: stackTrace);
+  }
+
+  @override
+  void info(dynamic msg) {
+    _logger.i(msg);
+  }
+
+  @override
+  void warning(dynamic msg) {
+    _logger.w(msg);
+  }
+
+  @override
+  void critical(dynamic msg, [Object? exception, StackTrace? stackTrace]) {
+    _logger.f(msg, error: exception, stackTrace: stackTrace);
+  }
+
+  @override
+  void showLogs(BuildContext context) {
+    // Простое сообщение, так как Logger не имеет UI
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Логи доступны в консоли')),
+    );
+  }
+}
